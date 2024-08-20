@@ -26,6 +26,7 @@
                 <td>@truck.MinutesUntilBreak</td>
                 <td>
                     <a href="@Url.Action("EditTruck", "Truck", new { id = truck.Id })" class="btn btn-primary">Edit</a>
+                    <a href="@Url.Action("CreateTransit", "Transit", new { truckId = truck.Id })" class="btn btn-success">Create Transit</a>
                 </td>
             </tr>
         }

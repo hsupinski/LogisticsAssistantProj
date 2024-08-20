@@ -22,6 +22,7 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>()
     .AddEntityFrameworkStores<AuthDbContext>();
 
 builder.Services.AddScoped<ITruckRepository, TruckRepository>();
+builder.Services.AddScoped<ITransitRepository, TransitRepository>();
 
 var app = builder.Build();
 

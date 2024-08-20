@@ -23,5 +23,18 @@ namespace LogisticsAssistantProject.Repositories
         {
             return await _assistantDbContext.Truck.ToListAsync();
         }
+
+        public Task<Truck> GetByIdAsync(int id)
+        {
+            return _assistantDbContext.Truck.FirstOrDefaultAsync(t => t.Id == id);
+        }
+
+        public async Task<Truck> UpdateAsync(Truck truck)
+        {
+            _assistantDbContext.Update(truck);
+            await _assistantDbContext.SaveChangesAsync();
+            return truck;
+
+        }
     }
 }
