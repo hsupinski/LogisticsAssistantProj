@@ -1,4 +1,5 @@
 using LogisticsAssistantProject.Data;
+using LogisticsAssistantProject.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,6 +20,8 @@ builder.Services.AddDbContext<AuthDbContext>(options =>
 
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
     .AddEntityFrameworkStores<AuthDbContext>();
+
+builder.Services.AddScoped<ITruckRepository, TruckRepository>();
 
 var app = builder.Build();
 

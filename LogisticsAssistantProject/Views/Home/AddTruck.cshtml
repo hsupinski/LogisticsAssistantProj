@@ -1,0 +1,43 @@
+﻿@model LogisticsAssistantProject.Models.ViewModels.AddTruckRequest
+
+@{
+    ViewData["Title"] = "Add Truck";
+}
+
+<h2>Add a new truck</h2>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @TempData["ErrorMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<form asp-action="Add" method="post" id="create-form">
+    <div class="form-group">
+        <label asp-for="MaxVelocity" class="control-label">Maximum velocity (in km/h)</label>
+        <input asp-for="MaxVelocity" class="form-control" id="MaxVelocity" />
+        <span asp-validation-for="MaxVelocity" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="BreakDuration" class="control-label">Break duration (in minutes)</label>
+        <input asp-for="BreakDuration" class="form-control" id="BreakDuration" />
+        <span asp-validation-for="BreakDuration" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="MinutesUntilBreak" class="control-label">Maximum amount of time until break (in minutes)</label>
+        <input asp-for="MinutesUntilBreak" class="form-control" id="MinutesUntilBreak" />
+        <span asp-validation-for="MinutesUntilBreak" class="text-danger"></span>
+    </div>
+    <div class="form-group mt-3">
+        <input type="submit" value="Create" class="btn btn-primary" />
+    </div>
+</form>

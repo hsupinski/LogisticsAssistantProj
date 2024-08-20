@@ -1,0 +1,33 @@
+﻿@model List<LogisticsAssistantProject.Models.Domain.Truck>
+
+@{
+    ViewData["Title"] = "List Trucks";
+}
+
+<h2>List of Trucks</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Max Velocity (km/h)</th>
+            <th>Break Duration (min)</th>
+            <th>Minutes Until Break</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var truck in Model)
+        {
+            <tr>
+                <td>@truck.Id</td>
+                <td>@truck.MaxVelocity</td>
+                <td>@truck.BreakDuration</td>
+                <td>@truck.MinutesUntilBreak</td>
+                <td>
+                    <a href="@Url.Action("EditTruck", "Truck", new { id = truck.Id })" class="btn btn-primary">Edit</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
