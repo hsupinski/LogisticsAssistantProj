@@ -1,5 +1,6 @@
 using LogisticsAssistantProject.Data;
 using LogisticsAssistantProject.Repositories;
+using LogisticsAssistantProject.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,6 +24,9 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>()
 
 builder.Services.AddScoped<ITruckRepository, TruckRepository>();
 builder.Services.AddScoped<ITransitRepository, TransitRepository>();
+builder.Services.AddScoped<ITruckService, TruckService>();
+builder.Services.AddScoped<ITransitService, TransitService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
 
 var app = builder.Build();
 

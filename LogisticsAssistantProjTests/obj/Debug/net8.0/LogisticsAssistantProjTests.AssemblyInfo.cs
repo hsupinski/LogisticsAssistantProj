@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("LogisticsAssistantProjTests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e95347bc98c052375cb6862a648db75481f624af")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3ddf468574131f080d9fb686747ed605ba701250")]
 [assembly: System.Reflection.AssemblyProductAttribute("LogisticsAssistantProjTests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("LogisticsAssistantProjTests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

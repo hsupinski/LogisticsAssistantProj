@@ -1,4 +1,5 @@
 ﻿using LogisticsAssistantProject.Models.ViewModels;
+using LogisticsAssistantProject.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,13 +7,11 @@ namespace LogisticsAssistantProject.Controllers
 {
     public class AccountController : Controller
     {
-        private UserManager<IdentityUser> _userManager;
-        private SignInManager<IdentityUser> _signInManager;
+        private readonly IAccountService _accountService;
 
-        public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
+        public AccountController(IAccountService accountService)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
+            _accountService = accountService;
         }
 
         [HttpGet]
@@ -26,18 +25,10 @@ namespace LogisticsAssistantProject.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new IdentityUser
-                {
-                    UserName = model.Username,
-                    Email = model.Email
-                };
-
-                var result = await _userManager.CreateAsync(user, model.Password);
+                var result = await _accountService.RegisterUserAsync(model);
 
                 if (result.Succeeded)
                 {
-                    await _userManager.AddToRoleAsync(user, "User");
-
                     return RedirectToAction("Index", "Home");
                 }
 
@@ -62,7 +53,7 @@ namespace LogisticsAssistantProject.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, false, false);
+                var result = await _accountService.LoginUserAsync(model);
 
                 if (result.Succeeded)
                 {
@@ -78,7 +69,7 @@ namespace LogisticsAssistantProject.Controllers
         [HttpGet]
         public async Task<IActionResult> Logout()
         {
-            await _signInManager.SignOutAsync();
+            await _accountService.LogoutUserAsync();
             return RedirectToAction("Index", "Home");
         }
     }

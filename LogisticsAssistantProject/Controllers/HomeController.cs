@@ -2,6 +2,7 @@ using LogisticsAssistantProject.Models;
 using LogisticsAssistantProject.Models.Domain;
 using LogisticsAssistantProject.Models.ViewModels;
 using LogisticsAssistantProject.Repositories;
+using LogisticsAssistantProject.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -11,12 +12,12 @@ namespace LogisticsAssistantProject.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly ITruckRepository _truckRepository;
+        private readonly ITruckService _truckService;
 
-        public HomeController(ILogger<HomeController> logger, ITruckRepository truckRepository)
+        public HomeController(ILogger<HomeController> logger, ITruckService truckService)
         {
             _logger = logger;
-            _truckRepository = truckRepository;
+            _truckService = truckService;
         }
 
         public IActionResult Index()
@@ -40,23 +41,15 @@ namespace LogisticsAssistantProject.Controllers
         [Authorize]
         public async Task<IActionResult> Add(AddTruckRequest request)
         {
-            var truck = new Truck
+            try
             {
-                MaxVelocity = request.MaxVelocity,
-                BreakDuration = request.BreakDuration,
-                MinutesUntilBreak = request.MinutesUntilBreak
-            };
-
-            if(truck.MaxVelocity <= 0 || truck.BreakDuration <= 0 || truck.MinutesUntilBreak <= 0)
-            {
-                TempData["ErrorMessage"] = "Failed to add truck. One or more values is not valid.";
-                return RedirectToAction("AddTruck");
+                await _truckService.AddTruckAsync(request);
+                TempData["SuccessMessage"] = "Truck added successfully!";
             }
-
-
-            await _truckRepository.AddAsync(truck);
-
-            TempData["SuccessMessage"] = "Truck added successfully!";
+            catch (ArgumentException ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+            }
 
             return RedirectToAction("AddTruck");
         }
@@ -65,16 +58,9 @@ namespace LogisticsAssistantProject.Controllers
         [Authorize]
         public async Task<IActionResult> ListTrucks()
         {
-            var trucks = await _truckRepository.GetAllAsync();
+            var trucks = await _truckService.GetAllTrucksAsync();
 
-            var model = new List<Truck>();
-
-            foreach(var truck in trucks)
-            {
-                model.Add(truck);
-            }
-
-            return View(model);
+            return View(trucks);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
