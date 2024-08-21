@@ -2,6 +2,7 @@ using LogisticsAssistantProject.Models;
 using LogisticsAssistantProject.Models.Domain;
 using LogisticsAssistantProject.Models.ViewModels;
 using LogisticsAssistantProject.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -29,12 +30,14 @@ namespace LogisticsAssistantProject.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public IActionResult AddTruck()
         {
             return View();
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Add(AddTruckRequest request)
         {
             var truck = new Truck
@@ -59,6 +62,7 @@ namespace LogisticsAssistantProject.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> ListTrucks()
         {
             var trucks = await _truckRepository.GetAllAsync();

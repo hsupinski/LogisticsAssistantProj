@@ -19,9 +19,9 @@ namespace LogisticsAssistantProject.Repositories
             return transit;
         }
 
-        public async Task<IEnumerable<Transit>> GetByIdAsync(int id)
+        public async Task<IEnumerable<Transit>> GetByTruckIdAsync(int id)
         {
-            return await _assistantDbContext.Transit.Where(t => t.Id == id).ToListAsync();
+            return await _assistantDbContext.Transit.Where(t => t.TruckId == id).ToListAsync();
         }
     }
 }

@@ -4,6 +4,14 @@
     ViewData["Title"] = "List Trucks";
 }
 
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
 <h2>List of Trucks</h2>
 
 <table class="table table-striped">
@@ -27,8 +35,24 @@
                 <td>
                     <a href="@Url.Action("EditTruck", "Truck", new { id = truck.Id })" class="btn btn-primary">Edit</a>
                     <a href="@Url.Action("CreateTransit", "Transit", new { truckId = truck.Id })" class="btn btn-success">Create Transit</a>
+                    <a href="@Url.Action("DeleteTruck", "Truck", new { id = truck.Id })" class="btn btn-danger">Delete</a>
                 </td>
             </tr>
         }
     </tbody>
 </table>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const deleteLinks = document.querySelectorAll('.btn-danger');
+
+        deleteLinks.forEach(function (link) {
+            link.addEventListener('click', function (event) {
+                const confirmDelete = confirm('Are you sure you want to delete this truck?');
+                if (!confirmDelete) {
+                    event.preventDefault(); // Cancel deletion
+                }
+            });
+        });
+    });
+</script>

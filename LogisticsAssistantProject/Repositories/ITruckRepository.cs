@@ -1,4 +1,5 @@
 ﻿using LogisticsAssistantProject.Models.Domain;
+using Microsoft.AspNetCore.Mvc;
 
 namespace LogisticsAssistantProject.Repositories
 {
@@ -8,5 +9,6 @@ namespace LogisticsAssistantProject.Repositories
         Task<Truck> GetByIdAsync(int id);
         Task<Truck> AddAsync(Truck truck);
         Task<Truck> UpdateAsync(Truck truck);
+        Task<IActionResult> DeleteAsync(int id);
     }
 }

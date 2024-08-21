@@ -1,6 +1,7 @@
 ﻿using LogisticsAssistantProject.Data;
 using LogisticsAssistantProject.Models.Domain;
 using LogisticsAssistantProject.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LogisticsAssistantProject.Controllers
@@ -14,6 +15,7 @@ namespace LogisticsAssistantProject.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> EditTruck(int id)
         {
             var truck = await _truckRepository.GetByIdAsync(id);
@@ -21,13 +23,14 @@ namespace LogisticsAssistantProject.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> EditTruck(Truck truck)
         {
 
             if (truck.MaxVelocity <= 0 || truck.BreakDuration <= 0 || truck.MinutesUntilBreak <= 0)
             {
                 TempData["ErrorMessage"] = "Failed to update truck. One or more values is not valid.";
-                return RedirectToAction("ListTrucks");
+                return RedirectToAction("ListTrucks", "Home");
             }
 
             await _truckRepository.UpdateAsync(truck);
@@ -36,6 +39,18 @@ namespace LogisticsAssistantProject.Controllers
 
             return View(truck);
         }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> DeleteTruck(int id)
+        {
+            await _truckRepository.DeleteAsync(id);
+            TempData["SuccessMessage"] = "Truck deleted successfully!";
+
+            return RedirectToAction("ListTrucks", "Home");
+        }
+
+
 
     }
 }

@@ -1,6 +1,7 @@
 ﻿using LogisticsAssistantProject.Models.Domain;
 using LogisticsAssistantProject.Models.ViewModels;
 using LogisticsAssistantProject.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LogisticsAssistantProject.Controllers
@@ -15,10 +16,11 @@ namespace LogisticsAssistantProject.Controllers
             _truckRepository = truckRepository;
         }
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> CreateTransit(int truckId)
         {
             var truck = await _truckRepository.GetByIdAsync(truckId);
-            var transitList = await _transitRepository.GetByIdAsync(truckId);
+            var transitList = await _transitRepository.GetByTruckIdAsync(truckId);
 
             var model = new CreateTransitViewModel
             {
@@ -34,13 +36,24 @@ namespace LogisticsAssistantProject.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> CreateTransit(CreateTransitViewModel model)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && model.Distance > 0)
             {
                 var truck = await _truckRepository.GetByIdAsync(model.Truck.Id);
 
+                var startTime = model.StartTime;
                 var endTime = model.StartTime.AddMinutes(model.Distance / (double)truck.MaxVelocity * 60);
+
+                foreach(var transit in model.TransitList)
+                {
+                    if (startTime < transit.EndTime && startTime > transit.StartTime || endTime < transit.EndTime && endTime > transit.StartTime)
+                    {
+                        TempData["ErrorMessage"] = "Failed to add transit. The transit overlaps with another transit. (" + transit.StartTime + " - " + transit.EndTime + ")";
+                        return RedirectToAction("CreateTransit", new { truckId = model.Truck.Id });
+                    }
+                }
 
                 // Distance and minutes until break are both integers
                 int amountOfBreaks = model.Distance / truck.MinutesUntilBreak;
@@ -48,7 +61,7 @@ namespace LogisticsAssistantProject.Controllers
                 var newTransit = new Transit
                 {
                     TruckId = truck.Id,
-                    StartTime = model.StartTime,
+                    StartTime = startTime,
                     Distance = model.Distance,
                     CreatedAt = DateTime.Now,
                     EndTime = endTime + TimeSpan.FromMinutes(truck.BreakDuration * amountOfBreaks),
