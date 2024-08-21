@@ -1,6 +1,5 @@
 ﻿using LogisticsAssistantProject.Models.ViewModels;
 using LogisticsAssistantProject.Services;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LogisticsAssistantProject.Controllers

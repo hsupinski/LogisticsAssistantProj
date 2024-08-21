@@ -30,6 +30,15 @@ builder.Services.AddScoped<IAccountService, AccountService>();
 
 var app = builder.Build();
 
+using (var Scope = app.Services.CreateScope())
+{
+    var assistantContext = Scope.ServiceProvider.GetRequiredService<AssistantDbContext>();
+    assistantContext.Database.Migrate();
+
+    var authContext = Scope.ServiceProvider.GetRequiredService<AuthDbContext>();
+    authContext.Database.Migrate();
+}
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {

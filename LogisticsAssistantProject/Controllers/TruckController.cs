@@ -1,6 +1,4 @@
-﻿using LogisticsAssistantProject.Data;
-using LogisticsAssistantProject.Models.Domain;
-using LogisticsAssistantProject.Repositories;
+﻿using LogisticsAssistantProject.Models.Domain;
 using LogisticsAssistantProject.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

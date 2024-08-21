@@ -31,7 +31,6 @@ namespace LogisticsAssistantProject.Services
                     }
                 }
 
-                // Distance and minutes until break are both integers
                 int amountOfBreaks = model.Distance / truck.MinutesUntilBreak;
 
                 var newTransit = new Transit
