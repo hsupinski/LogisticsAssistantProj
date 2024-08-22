@@ -19,9 +19,9 @@ namespace LogisticsAssistantProjTests
 
         public AccountControllerTests()
         {
-            _accountServiceMock = new Mock<IAccountService>();
+            var accountService = new TestAccountService();
             _loggerMock = new Mock<ILogger<AccountController>>();
-            _accountController = new AccountController(_accountServiceMock.Object, _loggerMock.Object);
+            _accountController = new AccountController(accountService, _loggerMock.Object);
 
             exampleRegisterViewModel = new RegisterViewModel
             {
@@ -53,9 +53,6 @@ namespace LogisticsAssistantProjTests
             // Arrange
             var model = exampleRegisterViewModel;
 
-            _accountServiceMock.Setup(x => x.RegisterUserAsync(model))
-                .ReturnsAsync(IdentityResult.Success);
-
             // Act
             var result = await _accountController.Register(model);
 
@@ -70,9 +67,12 @@ namespace LogisticsAssistantProjTests
         public async Task Register_ReturnsViewResult_WhenRegistrationFails()
         {
             // Arrange
-            var model = exampleRegisterViewModel;
-
-            _accountController.ModelState.AddModelError("Error", "Test error");
+            var model = new RegisterViewModel
+            {
+                Username = "invalid",
+                Email = "invalid@example.com",
+                Password = "Invalid123!"
+            };
 
             // Act
             var result = await _accountController.Register(model);
@@ -98,9 +98,6 @@ namespace LogisticsAssistantProjTests
             // Arrange
             var model = exampleLoginViewModel;
 
-            _accountServiceMock.Setup(x => x.LoginUserAsync(model))
-                .ReturnsAsync(Microsoft.AspNetCore.Identity.SignInResult.Success);
-
             // Act
             var result = await _accountController.Login(model);
 
@@ -115,10 +112,11 @@ namespace LogisticsAssistantProjTests
         public async Task Login_ReturnsRedirectToActionResult_WhenLoginFails()
         {
             // Arrange
-            var model = exampleLoginViewModel;
-
-            _accountServiceMock.Setup(x => x.LoginUserAsync(model))
-                .ReturnsAsync(Microsoft.AspNetCore.Identity.SignInResult.Failed);
+            var model = new LoginViewModel
+            {
+                Username = "invalid",
+                Password = "Invalid123!"
+            };
 
             // Act
             var result = await _accountController.Login(model);

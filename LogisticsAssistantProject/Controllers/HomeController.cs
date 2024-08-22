@@ -66,7 +66,7 @@ namespace LogisticsAssistantProject.Controllers
             _logger.LogInformation("ListTrucks page visited");
             var trucks = await _truckService.GetAllTrucksAsync();
 
-            return View(trucks);
+            return View(trucks.ToList());
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

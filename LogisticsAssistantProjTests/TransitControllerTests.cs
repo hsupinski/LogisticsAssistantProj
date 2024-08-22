@@ -14,7 +14,7 @@ namespace LogisticsAssistantProjTests
 {
     public class TransitControllerTests
     {
-        private readonly Mock<ITransitService> _transitServiceMock;
+
         private readonly Mock<ILogger<TransitController>> _loggerMock;
         private readonly TransitController _transitController;
         private readonly List<Transit> validTransitList;
@@ -23,9 +23,9 @@ namespace LogisticsAssistantProjTests
 
         public TransitControllerTests()
         {
-            _transitServiceMock = new Mock<ITransitService>();
+            var transitService = new TestTransitService();
             _loggerMock = new Mock<ILogger<TransitController>>();
-            _transitController = new TransitController(_transitServiceMock.Object, _loggerMock.Object);
+            _transitController = new TransitController(transitService, _loggerMock.Object);
 
             var httpContext = new DefaultHttpContext();
             var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
@@ -102,13 +102,12 @@ namespace LogisticsAssistantProjTests
 
             var transitList = validTransitList;
 
-            var model = new CreateTransitViewModel
+            var expectedModel = new CreateTransitViewModel
             {
                 Truck = truck,
-                TransitList = transitList
+                TransitList = transitList,
+                Distance = 100
             };
-
-            _transitServiceMock.Setup(t => t.GetTruckTransitsAsync(truckId)).ReturnsAsync(model);
 
             // Act
             var result = await _transitController.CreateTransit(truckId);
@@ -116,8 +115,14 @@ namespace LogisticsAssistantProjTests
             // Assert
             var viewResult = result.Should().BeOfType<ViewResult>().Subject;
             var receivedModel = viewResult.Model.Should().BeOfType<CreateTransitViewModel>().Subject;
-            receivedModel.Should().BeEquivalentTo(model);
-            receivedModel.TransitList.Count.Should().Be(model.TransitList.Count);
+
+            receivedModel.Truck.Should().BeEquivalentTo(expectedModel.Truck);
+            receivedModel.TransitList.Should().BeEquivalentTo(expectedModel.TransitList, options => options
+                .Excluding(t => t.Id)
+                .Excluding(t => t.CreatedAt)
+                .Excluding(t => t.StartTime)
+                .Excluding(t => t.EndTime));
+            receivedModel.Distance.Should().Be(expectedModel.Distance);
         }
 
         [Fact]
@@ -133,10 +138,6 @@ namespace LogisticsAssistantProjTests
                 Truck = truck,
                 TransitList = transitList
             };
-
-            _transitServiceMock.Setup(t => t.GetTruckTransitsAsync(truckId)).ReturnsAsync(model);
-            _transitServiceMock.Setup(t => t.AddTransitAsync(It.IsAny<CreateTransitViewModel>()))
-                               .ThrowsAsync(new ArgumentException("Transit overlaps with an existing one"));
 
             // Act
             var result = await _transitController.CreateTransit(model);
@@ -161,10 +162,6 @@ namespace LogisticsAssistantProjTests
                 Distance = 0, // Invalid distance
                 StartTime = DateTime.Now
             };
-
-            _transitController.ModelState.AddModelError("Distance", "Invalid distance");
-
-            _transitServiceMock.Setup(t => t.GetTruckTransitsAsync(truck.Id)).ReturnsAsync(model);
 
             // Act
             var result = await _transitController.CreateTransit(model);

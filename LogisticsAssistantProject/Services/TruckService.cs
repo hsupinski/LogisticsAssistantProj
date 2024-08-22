@@ -37,7 +37,8 @@ namespace LogisticsAssistantProject.Services
 
         public async Task<IEnumerable<Truck>> GetAllTrucksAsync()
         {
-            return await _truckRepository.GetAllAsync();
+            var trucks = await _truckRepository.GetAllAsync();
+            return trucks.ToList();
         }
 
         public async Task<Truck> GetByIdAsync(int id)

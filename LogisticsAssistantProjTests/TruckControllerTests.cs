@@ -12,16 +12,15 @@ namespace LogisticsAssistantProjTests
 {
     public class TruckControllerTests
     {
-        private readonly Mock<ITruckService> _truckServiceMock;
         private readonly Mock<ILogger<TruckController>> _loggerMock;
         private readonly TruckController _truckController;
         private readonly Truck exampleTruck;
 
         public TruckControllerTests()
         {
-            _truckServiceMock = new Mock<ITruckService>();
+            var truckService = new TestTruckService();
             _loggerMock = new Mock<ILogger<TruckController>>();
-            _truckController = new TruckController(_truckServiceMock.Object, _loggerMock.Object);
+            _truckController = new TruckController(truckService, _loggerMock.Object);
 
             var httpContext = new DefaultHttpContext();
             var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
@@ -42,8 +41,6 @@ namespace LogisticsAssistantProjTests
             // Arrange
             var truck = exampleTruck;
 
-            _truckServiceMock.Setup(s => s.GetByIdAsync(truck.Id)).ReturnsAsync(truck);
-
             // Act
             var result = await _truckController.EditTruck(truck.Id);
 
@@ -58,8 +55,6 @@ namespace LogisticsAssistantProjTests
         {
             // Arrange
             var truck = exampleTruck;
-
-            _truckServiceMock.Setup(s => s.UpdateTruckAsync(truck)).Returns(Task.CompletedTask);
 
             // Act
             var result = await _truckController.EditTruck(truck);
@@ -83,9 +78,6 @@ namespace LogisticsAssistantProjTests
                 MinutesUntilBreak = 0 // Invalid
             };
 
-            _truckServiceMock.Setup(s => s.UpdateTruckAsync(truck))
-                             .ThrowsAsync(new ArgumentException("Invalid truck data"));
-
             // Act
             var result = await _truckController.EditTruck(truck);
 
@@ -101,8 +93,6 @@ namespace LogisticsAssistantProjTests
         {
             // Arrange
             var truck = exampleTruck;
-
-            _truckServiceMock.Setup(s => s.DeleteByIdAsync(truck.Id)).Returns(Task.CompletedTask);
 
             // Act
             var result = await _truckController.DeleteTruck(truck.Id);
