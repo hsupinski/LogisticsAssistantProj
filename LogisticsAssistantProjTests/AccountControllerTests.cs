@@ -4,12 +4,15 @@ using Moq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using LogisticsAssistantProject.Models.ViewModels;
+using Castle.Core.Logging;
+using Microsoft.Extensions.Logging;
 
 namespace LogisticsAssistantProjTests
 {
     public class AccountControllerTests
     {
         private readonly Mock<IAccountService> _accountServiceMock;
+        private readonly Mock<ILogger<AccountController>> _loggerMock;
         private readonly AccountController _accountController;
         private readonly RegisterViewModel exampleRegisterViewModel;
         private readonly LoginViewModel exampleLoginViewModel;
@@ -17,7 +20,7 @@ namespace LogisticsAssistantProjTests
         public AccountControllerTests()
         {
             _accountServiceMock = new Mock<IAccountService>();
-            _accountController = new AccountController(_accountServiceMock.Object);
+            _accountController = new AccountController(_accountServiceMock.Object, _loggerMock.Object);
 
             exampleRegisterViewModel = new RegisterViewModel
             {

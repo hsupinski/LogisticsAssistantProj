@@ -1,10 +1,12 @@
-﻿using LogisticsAssistantProject.Controllers;
+﻿using Castle.Core.Logging;
+using LogisticsAssistantProject.Controllers;
 using LogisticsAssistantProject.Models.Domain;
 using LogisticsAssistantProject.Models.ViewModels;
 using LogisticsAssistantProject.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace LogisticsAssistantProjTests
@@ -12,6 +14,7 @@ namespace LogisticsAssistantProjTests
     public class TransitControllerTests
     {
         private readonly Mock<ITransitService> _transitServiceMock;
+        private readonly Mock<ILogger<TransitController>> _loggerMock;
         private readonly TransitController _transitController;
         private readonly List<Transit> validTransitList;
         private readonly List<Transit> overlapingTransitList;
@@ -20,7 +23,7 @@ namespace LogisticsAssistantProjTests
         public TransitControllerTests()
         {
             _transitServiceMock = new Mock<ITransitService>();
-            _transitController = new TransitController(_transitServiceMock.Object);
+            _transitController = new TransitController(_transitServiceMock.Object, _loggerMock.Object);
 
             var httpContext = new DefaultHttpContext();
             var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());

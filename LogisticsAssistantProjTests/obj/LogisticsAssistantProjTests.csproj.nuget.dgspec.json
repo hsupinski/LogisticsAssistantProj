@@ -67,6 +67,22 @@
               "suppressParent": "All",
               "target": "Package",
               "version": "[8.0.8, )"
+            },
+            "NLog": {
+              "target": "Package",
+              "version": "[5.3.3, )"
+            },
+            "NLog.Database": {
+              "target": "Package",
+              "version": "[5.3.3, )"
+            },
+            "NLog.Web.AspNetCore": {
+              "target": "Package",
+              "version": "[5.3.12, )"
+            },
+            "Pomelo.EntityFrameworkCore.MySql": {
+              "target": "Package",
+              "version": "[8.0.2, )"
             }
           },
           "imports": [

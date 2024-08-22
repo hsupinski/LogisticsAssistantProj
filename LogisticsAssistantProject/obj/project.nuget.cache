@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "pfg17kpNww0=",
+  "dgSpecHash": "p9WZuateR7k=",
   "success": true,
   "projectFilePath": "C:\\Users\\Hubert\\source\\repos\\LogisticsAssistantProject\\LogisticsAssistantProject\\LogisticsAssistantProject.csproj",
   "expectedPackageFiles": [
@@ -55,6 +55,12 @@
     "C:\\Users\\Hubert\\.nuget\\packages\\microsoft.web.infrastructure\\1.0.0\\microsoft.web.infrastructure.1.0.0.nupkg.sha512",
     "C:\\Users\\Hubert\\.nuget\\packages\\microsoft.win32.systemevents\\6.0.0\\microsoft.win32.systemevents.6.0.0.nupkg.sha512",
     "C:\\Users\\Hubert\\.nuget\\packages\\mono.texttemplating\\2.2.1\\mono.texttemplating.2.2.1.nupkg.sha512",
+    "C:\\Users\\Hubert\\.nuget\\packages\\mysqlconnector\\2.3.5\\mysqlconnector.2.3.5.nupkg.sha512",
+    "C:\\Users\\Hubert\\.nuget\\packages\\nlog\\5.3.3\\nlog.5.3.3.nupkg.sha512",
+    "C:\\Users\\Hubert\\.nuget\\packages\\nlog.database\\5.3.3\\nlog.database.5.3.3.nupkg.sha512",
+    "C:\\Users\\Hubert\\.nuget\\packages\\nlog.extensions.logging\\5.3.12\\nlog.extensions.logging.5.3.12.nupkg.sha512",
+    "C:\\Users\\Hubert\\.nuget\\packages\\nlog.web.aspnetcore\\5.3.12\\nlog.web.aspnetcore.5.3.12.nupkg.sha512",
+    "C:\\Users\\Hubert\\.nuget\\packages\\pomelo.entityframeworkcore.mysql\\8.0.2\\pomelo.entityframeworkcore.mysql.8.0.2.nupkg.sha512",
     "C:\\Users\\Hubert\\.nuget\\packages\\system.codedom\\4.4.0\\system.codedom.4.4.0.nupkg.sha512",
     "C:\\Users\\Hubert\\.nuget\\packages\\system.collections.immutable\\6.0.0\\system.collections.immutable.6.0.0.nupkg.sha512",
     "C:\\Users\\Hubert\\.nuget\\packages\\system.composition\\6.0.0\\system.composition.6.0.0.nupkg.sha512",

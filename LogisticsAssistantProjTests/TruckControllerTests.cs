@@ -4,6 +4,7 @@ using LogisticsAssistantProject.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace LogisticsAssistantProjTests
@@ -11,13 +12,14 @@ namespace LogisticsAssistantProjTests
     public class TruckControllerTests
     {
         private readonly Mock<ITruckService> _truckServiceMock;
+        private readonly Mock<ILogger<TruckController>> _loggerMock;
         private readonly TruckController _truckController;
         private readonly Truck exampleTruck;
 
         public TruckControllerTests()
         {
             _truckServiceMock = new Mock<ITruckService>();
-            _truckController = new TruckController(_truckServiceMock.Object);
+            _truckController = new TruckController(_truckServiceMock.Object, _loggerMock.Object);
 
             var httpContext = new DefaultHttpContext();
             var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());

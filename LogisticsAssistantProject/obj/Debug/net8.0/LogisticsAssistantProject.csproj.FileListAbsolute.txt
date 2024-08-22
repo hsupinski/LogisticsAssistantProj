@@ -148,3 +148,10 @@ C:\Users\Hubert\source\repos\LogisticsAssistantProject\LogisticsAssistantProject
 C:\Users\Hubert\source\repos\LogisticsAssistantProject\LogisticsAssistantProject\bin\Debug\net8.0\System.Web.WebPages.Razor.dll
 C:\Users\Hubert\source\repos\LogisticsAssistantProject\LogisticsAssistantProject\bin\Debug\net8.0\System.Web.WebPages.dll
 C:\Users\Hubert\source\repos\LogisticsAssistantProject\LogisticsAssistantProject\bin\Debug\net8.0\Microsoft.Web.Infrastructure.dll
+C:\Users\Hubert\source\repos\LogisticsAssistantProject\LogisticsAssistantProject\bin\Debug\net8.0\nlog.config
+C:\Users\Hubert\source\repos\LogisticsAssistantProject\LogisticsAssistantProject\bin\Debug\net8.0\NLog.dll
+C:\Users\Hubert\source\repos\LogisticsAssistantProject\LogisticsAssistantProject\bin\Debug\net8.0\NLog.Extensions.Logging.dll
+C:\Users\Hubert\source\repos\LogisticsAssistantProject\LogisticsAssistantProject\bin\Debug\net8.0\NLog.Web.AspNetCore.dll
+C:\Users\Hubert\source\repos\LogisticsAssistantProject\LogisticsAssistantProject\bin\Debug\net8.0\NLog.Database.dll
+C:\Users\Hubert\source\repos\LogisticsAssistantProject\LogisticsAssistantProject\bin\Debug\net8.0\MySqlConnector.dll
+C:\Users\Hubert\source\repos\LogisticsAssistantProject\LogisticsAssistantProject\bin\Debug\net8.0\Pomelo.EntityFrameworkCore.MySql.dll

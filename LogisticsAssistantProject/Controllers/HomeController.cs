@@ -20,11 +20,13 @@ namespace LogisticsAssistantProject.Controllers
 
         public IActionResult Index()
         {
+            _logger.LogInformation("Index page visited");
             return View();
         }
 
         public IActionResult Privacy()
         {
+            _logger.LogInformation("Privacy page visited");
             return View();
         }
 
@@ -32,6 +34,7 @@ namespace LogisticsAssistantProject.Controllers
         [Authorize]
         public IActionResult AddTruck()
         {
+            _logger.LogInformation("AddTruck page visited");
             return View();
         }
 
@@ -39,14 +42,18 @@ namespace LogisticsAssistantProject.Controllers
         [Authorize]
         public async Task<IActionResult> Add(AddTruckRequest request)
         {
+            _logger.LogInformation("AddTruck request received");
+
             try
             {
                 await _truckService.AddTruckAsync(request);
                 TempData["SuccessMessage"] = "Truck added successfully!";
+                _logger.LogInformation("Truck added successfully");
             }
             catch (ArgumentException ex)
             {
                 TempData["ErrorMessage"] = ex.Message;
+                _logger.LogError(ex, "Failed to add truck");
             }
 
             return RedirectToAction("AddTruck");
@@ -56,6 +63,7 @@ namespace LogisticsAssistantProject.Controllers
         [Authorize]
         public async Task<IActionResult> ListTrucks()
         {
+            _logger.LogInformation("ListTrucks page visited");
             var trucks = await _truckService.GetAllTrucksAsync();
 
             return View(trucks);
@@ -64,6 +72,7 @@ namespace LogisticsAssistantProject.Controllers
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
+            _logger.LogError("Error page visited");
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
