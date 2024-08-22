@@ -1,4 +1,8 @@
-﻿@model LogisticsAssistantProject.Models.ViewModels.CreateTransitViewModel
+﻿<head>
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
+</head>
+
+@model LogisticsAssistantProject.Models.ViewModels.CreateTransitViewModel
 
 @{
     ViewData["Title"] = "Create Transit";
@@ -20,25 +24,20 @@
 }
 
 <h3>Reserved Transits for Truck with Id: @Model.Truck.Id</h3>
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Start Time</th>
-            <th>End Time</th>
-            <th>Distance (km)</th>
-        </tr>
-    </thead>
-    <tbody>
-        @for (int i = 0; i < Model.TransitList.Count; i++)
-        {
-            <tr>
-                <td>@Model.TransitList[i].StartTime.ToString("g")</td>
-                <td>@Model.TransitList[i].EndTime.ToString("g")</td>
-                <td>@Model.TransitList[i].Distance</td>
-            </tr>
-        }
-    </tbody>
-</table>
+
+@if(@Model.TransitList.Count == 0)
+{
+    <div class="mt-5 mb-5">
+        <h5>No transits found!</h5>
+    </div>
+    
+}
+@if (@Model.TransitList.Count > 0)
+{
+    <div class="mt-5" id="gantt_chart"> style="width: 100%; height: 400px;"></div>
+}
+
+
 
 <h3>New Transit</h3>
 <form asp-action="CreateTransit" method="post">
@@ -71,4 +70,49 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+
+    <!-- Skrypt do ładowania i rysowania wykresu Gantta -->
+    <script type="text/javascript">
+        google.charts.load('current', { packages: ['gantt'] });
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Task ID');
+            data.addColumn('string', 'Task Name');
+            data.addColumn('date', 'Start Date');
+            data.addColumn('date', 'End Date');
+            data.addColumn('number', 'Duration');
+            data.addColumn('number', '% Complete');
+            data.addColumn('string', 'Dependencies');
+
+            data.addRows([
+        @foreach (var transit in Model.TransitList)
+        {
+            var startTime = transit.StartTime.ToString("yyyy, M - 1, d, H, m, s");
+            var endTime = transit.EndTime.ToString("yyyy, M - 1, d, H, m, s");
+
+            <text>
+                        ['@transit.Id', 'Transit @transit.Id',
+                        new Date(@startTime),
+                        new Date(@endTime), null, 0, null
+                        ],
+            </text>
+        }
+            ]);
+
+            console.log(data)
+
+            var chart = new google.visualization.Gantt(document.getElementById('gantt_chart'));
+
+            var options = {
+                height: 400,
+                gantt: {
+                    trackHeight: 30
+                }
+            };
+
+            chart.draw(data, options);
+        }
+    </script>
 }

@@ -23,7 +23,21 @@ namespace LogisticsAssistantProject.Repositories
 
         public async Task<IActionResult> DeleteAsync(int id)
         {
-            await _assistantDbContext.Database.ExecuteSqlInterpolatedAsync($"DELETE FROM Truck WHERE Id = {id}");
+            // Delete transits with id equal to the truck id
+            var transits = await _assistantDbContext.Transit.Where(t => t.TruckId == id).ToListAsync();
+            _assistantDbContext.Transit.RemoveRange(transits);
+
+            // Remove the object
+
+            var truck = await _assistantDbContext.Truck.FindAsync(id);
+
+            if(truck != null)
+            {
+                _assistantDbContext.Truck.Remove(truck);
+            }
+
+            await _assistantDbContext.SaveChangesAsync();
+
             return new OkResult();
         }
 
