@@ -1,4 +1,5 @@
 ﻿using Castle.Core.Logging;
+using FluentAssertions;
 using LogisticsAssistantProject.Controllers;
 using LogisticsAssistantProject.Models.Domain;
 using LogisticsAssistantProject.Models.ViewModels;
@@ -23,6 +24,7 @@ namespace LogisticsAssistantProjTests
         public TransitControllerTests()
         {
             _transitServiceMock = new Mock<ITransitService>();
+            _loggerMock = new Mock<ILogger<TransitController>>();
             _transitController = new TransitController(_transitServiceMock.Object, _loggerMock.Object);
 
             var httpContext = new DefaultHttpContext();
@@ -112,10 +114,10 @@ namespace LogisticsAssistantProjTests
             var result = await _transitController.CreateTransit(truckId);
 
             // Assert
-            var viewResult = Assert.IsType<ViewResult>(result);
-            var receivedModel = Assert.IsType<CreateTransitViewModel>(viewResult.Model);
-            Assert.Equal(model, receivedModel);
-            Assert.Equal(model.TransitList.Count, receivedModel.TransitList.Count);
+            var viewResult = result.Should().BeOfType<ViewResult>().Subject;
+            var receivedModel = viewResult.Model.Should().BeOfType<CreateTransitViewModel>().Subject;
+            receivedModel.Should().BeEquivalentTo(model);
+            receivedModel.TransitList.Count.Should().Be(model.TransitList.Count);
         }
 
         [Fact]
@@ -140,10 +142,11 @@ namespace LogisticsAssistantProjTests
             var result = await _transitController.CreateTransit(model);
 
             // Assert
-            var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
-            Assert.Equal("CreateTransit", redirectToActionResult.ActionName);
-            Assert.True(_transitController.TempData.ContainsKey("ErrorMessage"));
-                }
+            result.Should().BeOfType<RedirectToActionResult>()
+                .Which.ActionName.Should().Be("CreateTransit");
+
+            _transitController.TempData.Should().ContainKey("ErrorMessage");
+        }
 
         [Fact]
         public async Task CreateTransit_ReturnsRedirectToActionResult_WhenModelIsInvalid()
@@ -167,9 +170,10 @@ namespace LogisticsAssistantProjTests
             var result = await _transitController.CreateTransit(model);
 
             // Assert
-            var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
-            Assert.Equal("CreateTransit", redirectToActionResult.ActionName);
-            Assert.True(_transitController.TempData.ContainsKey("ErrorMessage"));
+            result.Should().BeOfType<RedirectToActionResult>()
+                .Which.ActionName.Should().Be("CreateTransit");
+
+            _transitController.TempData.Should().ContainKey("ErrorMessage");
         }
     }
 }

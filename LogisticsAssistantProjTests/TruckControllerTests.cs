@@ -1,4 +1,5 @@
-﻿using LogisticsAssistantProject.Controllers;
+﻿using FluentAssertions;
+using LogisticsAssistantProject.Controllers;
 using LogisticsAssistantProject.Models.Domain;
 using LogisticsAssistantProject.Services;
 using Microsoft.AspNetCore.Http;
@@ -19,6 +20,7 @@ namespace LogisticsAssistantProjTests
         public TruckControllerTests()
         {
             _truckServiceMock = new Mock<ITruckService>();
+            _loggerMock = new Mock<ILogger<TruckController>>();
             _truckController = new TruckController(_truckServiceMock.Object, _loggerMock.Object);
 
             var httpContext = new DefaultHttpContext();
@@ -46,9 +48,9 @@ namespace LogisticsAssistantProjTests
             var result = await _truckController.EditTruck(truck.Id);
 
             // Assert
-            var viewResult = Assert.IsType<ViewResult>(result);
-            var model = Assert.IsType<Truck>(viewResult.Model);
-            Assert.Equal(truck.Id, model.Id);
+            var viewResult = result.Should().BeOfType<ViewResult>().Subject;
+            var model = viewResult.Model.Should().BeOfType<Truck>().Subject;
+            model.Id.Should().Be(truck.Id);
         }
 
         [Fact]
@@ -63,10 +65,10 @@ namespace LogisticsAssistantProjTests
             var result = await _truckController.EditTruck(truck);
 
             // Assert
-            var viewResult = Assert.IsType<ViewResult>(result);
-            var model = Assert.IsType<Truck>(viewResult.Model);
-            Assert.Equal(truck.Id, model.Id);
-            Assert.True(_truckController.TempData.ContainsKey("SuccessMessage"));
+            var viewResult = result.Should().BeOfType<ViewResult>().Subject;
+            var model = viewResult.Model.Should().BeOfType<Truck>().Subject;
+            model.Id.Should().Be(truck.Id);
+            _truckController.TempData.Should().ContainKey("SuccessMessage");
         }
 
         [Fact]
@@ -88,10 +90,10 @@ namespace LogisticsAssistantProjTests
             var result = await _truckController.EditTruck(truck);
 
             // Assert
-            var viewResult = Assert.IsType<ViewResult>(result);
-            var model = Assert.IsType<Truck>(viewResult.Model);
-            Assert.Equal(truck.Id, model.Id);
-            Assert.True(_truckController.TempData.ContainsKey("ErrorMessage"));
+            var viewResult = result.Should().BeOfType<ViewResult>().Subject;
+            var model = viewResult.Model.Should().BeOfType<Truck>().Subject;
+            model.Id.Should().Be(truck.Id);
+            _truckController.TempData.Should().ContainKey("ErrorMessage");
         }
 
         [Fact]
@@ -106,9 +108,10 @@ namespace LogisticsAssistantProjTests
             var result = await _truckController.DeleteTruck(truck.Id);
 
             // Assert
-            var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
-            Assert.Equal("ListTrucks", redirectToActionResult.ActionName);
-            Assert.True(_truckController.TempData.ContainsKey("SuccessMessage"));
+            result.Should().BeOfType<RedirectToActionResult>()
+                .Which.ActionName.Should().Be("ListTrucks");
+
+            _truckController.TempData.Should().ContainKey("SuccessMessage");
         }
     }
 }

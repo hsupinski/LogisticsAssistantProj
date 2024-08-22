@@ -4,8 +4,8 @@ using Moq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using LogisticsAssistantProject.Models.ViewModels;
-using Castle.Core.Logging;
 using Microsoft.Extensions.Logging;
+using FluentAssertions;
 
 namespace LogisticsAssistantProjTests
 {
@@ -20,6 +20,7 @@ namespace LogisticsAssistantProjTests
         public AccountControllerTests()
         {
             _accountServiceMock = new Mock<IAccountService>();
+            _loggerMock = new Mock<ILogger<AccountController>>();
             _accountController = new AccountController(_accountServiceMock.Object, _loggerMock.Object);
 
             exampleRegisterViewModel = new RegisterViewModel
@@ -43,7 +44,7 @@ namespace LogisticsAssistantProjTests
             var result = _accountController.Register();
 
             // Assert
-            var viewResult = Assert.IsType<ViewResult>(result);
+            result.Should().BeOfType<ViewResult>();
         }
 
         [Fact]
@@ -59,9 +60,10 @@ namespace LogisticsAssistantProjTests
             var result = await _accountController.Register(model);
 
             // Assert
-            var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
-            Assert.Equal("Index", redirectToActionResult.ActionName);
-            Assert.Equal("Home", redirectToActionResult.ControllerName);
+            result.Should().BeOfType<RedirectToActionResult>()
+                .Which.ActionName.Should().Be("Index");
+
+            result.As<RedirectToActionResult>().ControllerName.Should().Be("Home");
         }
 
         [Fact]
@@ -76,8 +78,8 @@ namespace LogisticsAssistantProjTests
             var result = await _accountController.Register(model);
 
             // Assert
-            var viewResult = Assert.IsType<ViewResult>(result);
-            Assert.Equal(model, viewResult.Model);
+            result.Should().BeOfType<ViewResult>()
+                .Which.Model.Should().Be(model);
         }
 
         [Fact]
@@ -87,7 +89,7 @@ namespace LogisticsAssistantProjTests
             var result = _accountController.Login();
 
             // Assert
-            Assert.IsType<ViewResult>(result);
+            result.Should().BeOfType<ViewResult>();
         }
 
         [Fact]
@@ -103,9 +105,10 @@ namespace LogisticsAssistantProjTests
             var result = await _accountController.Login(model);
 
             // Assert
-            var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
-            Assert.Equal("Index", redirectToActionResult.ActionName);
-            Assert.Equal("Home", redirectToActionResult.ControllerName);
+            result.Should().BeOfType<RedirectToActionResult>()
+                .Which.ActionName.Should().Be("Index");
+
+            result.As<RedirectToActionResult>().ControllerName.Should().Be("Home");
         }
 
         [Fact]
@@ -121,10 +124,11 @@ namespace LogisticsAssistantProjTests
             var result = await _accountController.Login(model);
 
             // Assert
-            var viewResult = Assert.IsType<ViewResult>(result);
-            Assert.Equal("Invalid Login Attempt", _accountController.ModelState[""].Errors[0].ErrorMessage);
-            Assert.True(_accountController.ModelState.ContainsKey(""));
-            Assert.Equal(model, viewResult.Model);
+            result.Should().BeOfType<ViewResult>()
+                .Which.Model.Should().Be(model);
+
+            _accountController.ModelState.Should().ContainKey("")
+                .WhoseValue.Errors[0].ErrorMessage.Should().Be("Invalid Login Attempt");
         }
 
         [Fact]
@@ -134,9 +138,10 @@ namespace LogisticsAssistantProjTests
             var result = await _accountController.Logout();
 
             // Assert
-            var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
-            Assert.Equal("Index", redirectToActionResult.ActionName);
-            Assert.Equal("Home", redirectToActionResult.ControllerName);
+            result.Should().BeOfType<RedirectToActionResult>()
+                .Which.ActionName.Should().Be("Index");
+
+            result.As<RedirectToActionResult>().ControllerName.Should().Be("Home");
         }
     }
 }

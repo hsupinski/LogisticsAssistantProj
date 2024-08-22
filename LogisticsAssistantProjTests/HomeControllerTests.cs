@@ -1,4 +1,5 @@
-﻿using LogisticsAssistantProject.Controllers;
+﻿using FluentAssertions;
+using LogisticsAssistantProject.Controllers;
 using LogisticsAssistantProject.Models.Domain;
 using LogisticsAssistantProject.Models.ViewModels;
 using LogisticsAssistantProject.Services;
@@ -34,7 +35,7 @@ namespace LogisticsAssistantProjTests
             var result = _homeController.Index();
 
             // Assert
-            var viewResult = Assert.IsType<ViewResult>(result);
+            result.Should().BeOfType<ViewResult>();
         }
 
         [Fact]
@@ -44,7 +45,7 @@ namespace LogisticsAssistantProjTests
             var result = _homeController.AddTruck();
 
             // Assert
-            var viewResult = Assert.IsType<ViewResult>(result);
+            result.Should().BeOfType<ViewResult>();
         }
 
         [Fact]
@@ -62,9 +63,10 @@ namespace LogisticsAssistantProjTests
             var result = await _homeController.Add(request);
 
             // Assert
-            var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
-            Assert.Equal("AddTruck", redirectToActionResult.ActionName);
-            Assert.True(_homeController.TempData.ContainsKey("SuccessMessage"));
+            result.Should().BeOfType<RedirectToActionResult>()
+                .Which.ActionName.Should().Be("AddTruck");
+
+            _homeController.TempData.Should().ContainKey("SuccessMessage");
         }
 
         [Fact]
@@ -85,9 +87,10 @@ namespace LogisticsAssistantProjTests
             var result = await _homeController.Add(request);
 
             // Assert
-            var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
-            Assert.Equal("AddTruck", redirectToActionResult.ActionName);
-            Assert.True(_homeController.TempData.ContainsKey("ErrorMessage"));
+            result.Should().BeOfType<RedirectToActionResult>()
+                .Which.ActionName.Should().Be("AddTruck");
+
+            _homeController.TempData.Should().ContainKey("ErrorMessage");
         }
 
         [Fact]
@@ -107,9 +110,9 @@ namespace LogisticsAssistantProjTests
             var result = await _homeController.ListTrucks();
 
             // Assert
-            var viewResult = Assert.IsType<ViewResult>(result);
-            var model = Assert.IsType<List<Truck>>(viewResult.Model);
-            Assert.Equal(trucks.Count, model.Count);
+            var viewResult = result.Should().BeOfType<ViewResult>().Subject;
+            var model = viewResult.Model.Should().BeOfType<List<Truck>>().Subject;
+            model.Count.Should().Be(trucks.Count);
         }
     }
 }
